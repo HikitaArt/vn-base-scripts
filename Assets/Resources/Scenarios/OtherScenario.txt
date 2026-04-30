@@ -1,0 +1,20 @@
+<music="alarm"><line>2</line>
+<music="alarm"><name="Я"><line>4</line>
+<sound="jump"><music="alarm"><name="Я"><line>4</line>
+<narrator><music="alarm"><line>Ты уже несколько часов сидишь в баре.</line>
+<bg="bar", anim="black", parallax=""><line>Назначеное время давно прошло.</line>
+<name="Я"><char="AI girl" anim="Character-appear"><line>И где они пропадают..?</line>
+<line>Мы же договорились на шесть... А уже половина девятого...</line>
+<narrator><line>Но к твоему счастью первый компаньон подошел до девяти.</line>
+<name="Девушка"><char="AI girl" anim="Character-appear"><line>Фух! Извини, опоздала. На дорогах жуткие пробки, я шла пешком.</line>
+<name="Я"><line>Но ты ведь живешь на другом конце города...</line>
+<name="Девушка"><line>Да! Именно поэтому я опоздала!</line>
+<name="Я"><line>Понятно... Кажется кто-то еще пришел.</line>
+<narrator><line>Это был второй человек, с которым ты должен был встретиться.</line>
+<name="Парень"><char="man" anim="Character-appear"><line>Простите, задержался на работе.</line>
+<line>Надеюсь вы тут не голодали без меня? Заказали себе что-нибудь?</line>
+<name="Я"><line>Да мы вдвоем тоже только встретились.</line>
+<name="Парень"><line>Тогда давайте закажем что-нибудь! А где же все официанты?</line>
+<narrator><line>Внезапно мимо стола пробегает крыса.</line>
+<name="Девушка"><sound="lullaby"><char="AI girl" anim="girl-jump"><char="man" anim="man-jump"><char="Me" anim="me-jump"><line>Ааа-аа!</line>
+<name="Парень"><line>Что за черт!</line>

@@ -1,0 +1,2 @@
+<narrator><music="music"><color="black"><line>Ты подобрал монетку</line>
+<line>+10 рублей</line> <var="money:+10">
