@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNBuilder - Документация</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PAGE: HOME (Оглавление)                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="page active" id="page-home">
+        <div class="home-container">
+            <div class="home__eyebrow">VNBuilder · Документация</div>
+            <h1 class="home__title">Конструктор <span>визуальных новелл</span></h1>
+            <p class="home__subtitle">Инструмент для создания интерактивных историй прямо в Unity Editor без кода</p>
+            <div class="home__divider"></div>
+            <nav class="home__grid" aria-label="Оглавление документации">
+                <a class="home__card" data-target="page-getting-started" onclick="navigateTo('page-getting-started')">
+                    <span class="home__card-icon">🚀</span>
+                    <span class="home__card-title">Начало работы</span>
+                    <span class="home__card-desc">Установка, первый запуск и базовые шаги</span>
+                </a>
+                <a class="home__card" data-target="page-interface" onclick="navigateTo('page-interface')">
+                    <span class="home__card-icon">🖥️</span>
+                    <span class="home__card-title">Разбор интерфейса</span>
+                    <span class="home__card-desc">Рабочая область плагина со всеми UI элементами</span>
+                </a>
+                <a class="home__card" data-target="page-tag-system" onclick="navigateTo('page-tag-system')">
+                    <span class="home__card-icon">🏷️</span>
+                    <span class="home__card-title">Теговая система</span>
+                    <span class="home__card-desc">Что там под капотом?</span>
+                </a>
+                <a class="home__card" data-target="page-links" onclick="navigateTo('page-links')">
+                    <span class="home__card-icon">🔗</span>
+                    <span class="home__card-title">Ссылки проекта</span>
+                    <span class="home__card-desc">Скачивание, полезные материалы и связанная информация</span>
+                </a>
+            </nav>
+            <div class="home__footer">Выберите раздел для начала изучения</div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PAGE: Начало работы                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="page" id="page-getting-started">
+        <div class="topbar">
+            <button class="topbar__home-link" onclick="navigateTo('page-home')" aria-label="На главную">
+                <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><polyline points="5 10 5 21 10 21 10 14 14 14 14 21 19 21 19 10"/></svg>
+                Главная
+            </button>
+            <span class="topbar__title">Начало работы</span>
+        </div>
+        <div class="page-layout">
+            <nav class="sidebar" aria-label="Разделы документации">
+                <a data-target="page-getting-started" onclick="navigateTo('page-getting-started')" class="sidebar-link active-link">
+                    <span class="dot"></span> Начало работы
+                </a>
+                <a data-target="page-interface" onclick="navigateTo('page-interface')" class="sidebar-link">
+                    <span class="dot"></span> Разбор интерфейса
+                </a>
+                <a data-target="page-tag-system" onclick="navigateTo('page-tag-system')" class="sidebar-link">
+                    <span class="dot"></span> Теговая система
+                </a>
+                <a data-target="page-links" onclick="navigateTo('page-links')" class="sidebar-link">
+                    <span class="dot"></span> Ссылки проекта
+                </a>
+            </nav>
+            <div class="page-content">
+                <h2>Установка плагина</h2>
+                <div class="text-block">
+                    <p>Первый шаг — добавить VNBuilder в ваш Unity-проект. Сделать это можно одним из двух способов, в зависимости от источника, откуда вы получили плагин.</p>
+                    <p>Если вы приобрели или скачали плагин через Unity Asset Store, то для установки выполните следующие действия:</p>
+                    <ol>
+                        <li>В верхнем меню Unity выберите Window → Package Manager.</li>
+                        <li>В открывшемся окне перейдите на вкладку My Assets (выберите в выпадающем списке в верхней части окна).</li>
+                        <li>Найдите в списке VNBuilder и нажмите кнопку Import.</li>
+                        <li>Дождитесь загрузки и подтвердите импорт всех необходимых файлов.</li>
+                    </ol>
+                    <p>Если вы получили файл плагина в формате .unitypackage с других площадок или напрямую от разработчика, установка ещё проще: достаточно просто перетащить его в окно Project.</p>
+                    <p>После успешного импорта в корне вашего проекта (в папке Assets) вы увидите две основные папки:</p>
+                    <ul>
+                        <li>VNBuilder: Содержит все программные компоненты плагина: скрипты, базовые настройки и вспомогательные инструменты, обеспечивающие работу конструктора визуальных новелл.</li>
+                        <li>Resources: Это главное хранилище всего игрового контента. Внутри вы найдёте заранее организованные подпапки, каждая из которых предназначена для определённого типа ресурсов</li>
+                    </ul>
+                </div>
+                <div class="image-placeholder">
+                    <img src="images/resources.png">
+                    <!--
+                    <svg class="image-placeholder__icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="2"/><path d="M21 15l-5-5-5 5"/></svg>
+                    <span class="image-placeholder__label">Изображение</span>
+                    <span class="image-placeholder__caption">Пример: окно импорта плагина в Package Manager</span>
+                    -->
+                </div>
+                <div class="text-block">
+                    <div class="callout"><strong>Важно!</strong> Для корректной работы плагина, также необходимо импортировать в проект TextMeshPro.</div>
+                </div>
+
+                <h2>Подготовка сцены</h2>
+                <div class="text-block">
+                    <p>Чтобы плагин корректно работал, сцена Unity должна содержать определённые элементы интерфейса и логики. 
+                        Вы можете воспользоваться готовым шаблоном (Demo Scene) или собрать сцену вручную — оба варианта описаны ниже.</p>
+                    <h3>Использование шаблона</h3>
+                    <p>Если вы только начинаете работу над визуальной новеллой, 
+                        проще всего взять за основу демо-сцену, которая поставляется вместе с плагином. 
+                        Она полностью настроена, содержит все необходимые компоненты и готова к немедленному запуску. 
+                        Вы можете либо редактировать её напрямую, либо создать копию (через Ctrl+D в окне Project)
+                         и работать в ней, оставив оригинал как запасной шаблон.</p>
+                    <p>Рекомендуем начинать именно с неё, чтобы избежать ручной настройки и возможных ошибок.</p>
+                    <h3>Ручная настройка</h3>
+                    <p>Если вы интегрируете VNBuilder в проект, разрабатываемый ранее, 
+                        и не можете перенести контент в демо-сцену, выполните следующие 
+                        шаги для создания необходимого окружения с нуля.</p>
+                    <ol>
+                        <li>В иерархии сцены создайте Panel, он будет выступать в роли подложки для текста. Внутрь него поместите TextMeshPro.</li>
+                        <li>Аналогичным образом создайте отдельный текстовый элемент для вывода имени говорящего.</li>
+                        <li>Добавьте новый Canvas (например, назовите BackgroundCanvas) и установите его порядок отрисовки (Sort Order) ниже, чем у основного Canvas.
+                            Внутри этого элемента создайте 2D спрайт для отображения фона на весь экран.</li>
+                        <li>Подключите скрипт Reader к основной камере на сцене и заполните все поля в инспекторе.</li>
+                    </ol>
+                    <p>После выполнения этих шагов сцена полностью готова к работе. Вы можете запустить игру, и воспроизведение сценария будет происходить так же, как и в демонстрационной сцене.</p>
+                </div>
+
+                <h2>Запуск игры</h2>
+                <div class="text-block">
+                    <p>После всех настроек можно запустить предпросмотр и насладиться результатом. 
+                        Перед вами полноценная игра, для которой вы не написали ни строчки кода!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PAGE: Разбор интерфейса                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="page" id="page-interface">
+        <div class="topbar">
+            <button class="topbar__home-link" onclick="navigateTo('page-home')" aria-label="На главную">
+                <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><polyline points="5 10 5 21 10 21 10 14 14 14 14 21 19 21 19 10"/></svg>
+                Главная
+            </button>
+            <span class="topbar__title">Разбор интерфейса</span>
+        </div>
+        <div class="page-layout">
+            <nav class="sidebar" aria-label="Разделы документации">
+                <a data-target="page-getting-started" onclick="navigateTo('page-getting-started')" class="sidebar-link">
+                    <span class="dot"></span> Начало работы
+                </a>
+                <a data-target="page-interface" onclick="navigateTo('page-interface')" class="sidebar-link active-link">
+                    <span class="dot"></span> Разбор интерфейса
+                </a>
+                <a data-target="page-tag-system" onclick="navigateTo('page-tag-system')" class="sidebar-link">
+                    <span class="dot"></span> Теговая система
+                </a>
+                <a data-target="page-links" onclick="navigateTo('page-links')" class="sidebar-link">
+                    <span class="dot"></span> Ссылки проекта
+                </a>
+            </nav>
+            <div class="page-content">
+                <h2>Пользовательский интерфейс</h2>
+                <div class="text-block">
+                    <p>Для создания и редактирования диалоговых сценариев в VNBuilder используется специальное окно — Scenario Editor. 
+                        Оно предоставляет удобный визуальный интерфейс, позволяющий построчно собирать повествование, не углубляясь в код.</p>
+                    <p>Чтобы открыть редактор сценариев, выберите в верхнем меню Unity пункт Window → Scenario Editor.</p>
+                    <p>Появившееся окно можно свободно перемещать и закреплять в любом удобном месте интерфейса Unity. 
+                        По умолчанию редактор разрабатывался с расчётом на размещение в правой части экрана — там, 
+                        где обычно располагается панель Inspector. Это позволяет видеть свойства выделенных строк 
+                        сценария без лишних перемещений мыши.</p>
+                    <p>Чтобы открыть редактор сценариев, выберите в верхнем меню Unity пункт Window → Scenario Editor.</p>
+                    <p>Перед началом работы необходимо загрузить текстовый файл сценария. 
+                        Все файлы сценариев храняться исключительно в папке Assets/Resources/Scenarios. 
+                        Чтобы открыть сценарий в редакторе, просто перетащите нужный текстовый 
+                        файл из этой папки в область окна Scenario Editor. После этого содержимое 
+                        файла автоматически отобразится в виде пронумерованных строк — 
+                        каждая строка представляет собой отдельный шаг сценария.</p>
+                </div>
+                <div class="image-placeholder">
+                    <img src="images/editor.png">
+                </div>
+                <div class="text-block">
+                    <p>Каждая строка сценария может содержать не только текст диалога, 
+                        но и специальные команды (события): смена говорящего, 
+                        появление персонажа, воспроизведение звука и многое другое. 
+                        Чтобы изменить конкретную строку, просто кликните по ней — она выделится, 
+                        и станут доступны кнопки редактирования.</p>
+                    <p>Кнопки расположены в верхней части редактора и окрашены в разные цвета для быстрого визуального поиска. 
+                        Вот их полный перечень:</p>
+                    <ol>
+                        <li>Добавить имя говорящего (зелёная кнопка): 
+                            Вставляет блок с полем для ввода имени персонажа. 
+                            Строка, идущая следом за этим блоком, будет отображаться как реплика указанного персонажа.</li>
+                        <li>Скрыть имя (голубая кнопка): 
+                            Добавляет команду, убирающую панель с именем говорящего. 
+                            Используется для перехода в «режим рассказчика», 
+                            когда текст подаётся без привязки к конкретному персонажу.</li>
+                        <li>Персонаж (розовая кнопка): 
+                            Отвечает за появление, изменение или скрытие персонажа на сцене. 
+                            В появившемся блоке можно задать, какого именно персонажа показать, 
+                            указать его начальную позицию и анимацию.</li>
+                        <li>Фон (оранжевая кнопка):
+                            Позволяет сменить фоновое изображение сцены. 
+                            В блоке нужно указать новый фон.</li>
+                        <li>Музыка (фиолетовая кнопка):
+                            Запускает проигрывание фоновой музыки. 
+                            В настройках блока выбирается аудиоклип, который будет звучать циклично.</li>
+                        <li>Звук (жёлтая кнопка):
+                            Проигрывает однократный звуковой эффект (например, стук, звонок, шаги). 
+                            Аналогично, требует указания аудиоклипа.</li>
+                        <li>Вариант ответа (красная кнопка):
+                            Добавляет интерактивный выбор для игрока. 
+                            В строке сценария появляется блок, в котором можно задать текст варианта и указать, 
+                            к какой следующей строке сценария перейдёт игра при его выборе.</li>
+                        <li>Добавить строку (белая кнопка): 
+                            Создаёт новую пустую строку сценария сразу после выделенной. 
+                            В неё затем можно добавить текст и любые из перечисленных выше событий, 
+                            нажав соответствующую кнопку повторно.</li>
+                    </ol>
+                    <p>Любой добавленный блок (имя, персонаж, музыка и т.п.) 
+                        содержит внутри себя поля для детальной настройки. Например:</p>
+                    <p>Блок имени имеет текстовое поле, куда достаточно вписать имя персонажа.</p>
+                    <p>Блок персонажа содержит не только текстовые поля, но и слот для префаба: 
+                        чтобы назначить персонажа, перетащите готовый префаб из папки Assets/Resources/Characters прямо в это поле. 
+                        Здесь же можно настроить координаты X и Y для точного позиционирования на экране, 
+                        а также выбрать анимацию из соответствующей папки в Resources.</p>
+                    <p>Аналогичным образом заполняются поля для фона, музыки и звука — везде, 
+                        где требуется выбрать ресурс, вы можете просто перетащить соответствующий файл 
+                        из папки Resources в предназначенную для этого область внутри редактора. 
+                        Такой подход исключает путаницу и делает процесс сборки сценария интуитивно понятным.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PAGE: Теговая система                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="page" id="page-tag-system">
+        <div class="topbar">
+            <button class="topbar__home-link" onclick="navigateTo('page-home')" aria-label="На главную">
+                <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><polyline points="5 10 5 21 10 21 10 14 14 14 14 21 19 21 19 10"/></svg>
+                Главная
+            </button>
+            <span class="topbar__title">Теговая система</span>
+        </div>
+        <div class="page-layout">
+            <nav class="sidebar" aria-label="Разделы документации">
+                <a data-target="page-getting-started" onclick="navigateTo('page-getting-started')" class="sidebar-link">
+                    <span class="dot"></span> Начало работы
+                </a>
+                <a data-target="page-interface" onclick="navigateTo('page-interface')" class="sidebar-link">
+                    <span class="dot"></span> Разбор интерфейса
+                </a>
+                <a data-target="page-tag-system" onclick="navigateTo('page-tag-system')" class="sidebar-link active-link">
+                    <span class="dot"></span> Теговая система
+                </a>
+                <a data-target="page-links" onclick="navigateTo('page-links')" class="sidebar-link">
+                    <span class="dot"></span> Ссылки проекта
+                </a>
+            </nav>
+            <div class="page-content">
+                <h2>Теги</h2>
+                <div class="text-block">
+                    <p>Скоро будет</p>
+                </div>
+
+                <div class="code-placeholder">
+                    <span>// Тут будет пример тегового выражения</span><br>
+                    &lt;<span>name="Гриша"</span>&gt; <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PAGE: Ссылки проекта                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="page" id="page-links">
+        <div class="topbar">
+            <button class="topbar__home-link" onclick="navigateTo('page-home')" aria-label="На главную">
+                <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><polyline points="5 10 5 21 10 21 10 14 14 14 14 21 19 21 19 10"/></svg>
+                Главная
+            </button>
+            <span class="topbar__title">Ссылки проекта</span>
+        </div>
+        <div class="page-layout">
+            <nav class="sidebar" aria-label="Разделы документации">
+                <a data-target="page-getting-started" onclick="navigateTo('page-getting-started')" class="sidebar-link">
+                    <span class="dot"></span> Начало работы
+                </a>
+                <a data-target="page-interface" onclick="navigateTo('page-interface')" class="sidebar-link">
+                    <span class="dot"></span> Разбор интерфейса
+                </a>
+                <a data-target="page-tag-system" onclick="navigateTo('page-tag-system')" class="sidebar-link">
+                    <span class="dot"></span> Теговая система
+                </a>
+                <a data-target="page-links" onclick="navigateTo('page-links')" class="sidebar-link active-link">
+                    <span class="dot"></span> Ссылки проекта
+                </a>
+            </nav>
+            <div class="page-content">
+                <h2>Ресурсы и ссылки</h2>
+                <div class="text-block">
+                    <p>Все важные ссылки, связанные с проектом: репозиторий, документация, сообщество, магазин Asset Store, социальные сети.</p>
+                </div>
+
+                <div class="links-grid">
+                    <a class="link-card" href="#" target="_blank" rel="noopener">
+                        <span class="link-card__icon">📦</span>
+                        <span class="link-card__info">
+                            <span class="link-card__title">Asset Store</span>
+                            <span class="link-card__url">assetstore.unity.com/...</span>
+                        </span>
+                    </a>
+                    <a class="link-card" href="#" target="_blank" rel="noopener">
+                        <span class="link-card__icon">🐙</span>
+                        <span class="link-card__info">
+                            <span class="link-card__title">GitHub</span>
+                            <span class="link-card__url">github.com/username/...</span>
+                        </span>
+                    </a>
+                    <a class="link-card" href="#" target="_blank" rel="noopener">
+                        <span class="link-card__icon">📖</span>
+                        <span class="link-card__info">
+                            <span class="link-card__title">Документация</span>
+                            <span class="link-card__url">docs.novel-plugin.dev</span>
+                        </span>
+                    </a>
+                    <a class="link-card" href="#" target="_blank" rel="noopener">
+                        <span class="link-card__icon">💬</span>
+                        <span class="link-card__info">
+                            <span class="link-card__title">Discord</span>
+                            <span class="link-card__url">discord.gg/...</span>
+                        </span>
+                    </a>
+                    <a class="link-card" href="#" target="_blank" rel="noopener">
+                        <span class="link-card__icon">🎬</span>
+                        <span class="link-card__info">
+                            <span class="link-card__title">YouTube</span>
+                            <span class="link-card__url">youtube.com/@...</span>
+                        </span>
+                    </a>
+                    <a class="link-card" href="#" target="_blank" rel="noopener">
+                        <span class="link-card__icon">🧢</span>
+                        <span class="link-card__info">
+                            <span class="link-card__title">VK</span>
+                            <span class="link-card__url">vk.com/...</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение внешнего JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
