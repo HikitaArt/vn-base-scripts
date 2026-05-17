@@ -594,6 +594,7 @@ public class TextFilesEditor : EditorWindow
                 animValue.style.width = 115;
                 animValue.value = Resources.Load<AnimationClip>("Animations/" + anim);
                 animValue.style.alignSelf = Align.Center;
+                animValue.RegisterValueChangedCallback(evt => ChangeCharAnimField(linesContainers.IndexOf(visualContainer), character.value.name, evt.newValue.name));
                 container.Add(animValue);
 
                 var xLabel = new Label();
@@ -605,6 +606,7 @@ public class TextFilesEditor : EditorWindow
                 var xValue = new FloatField();
                 xValue.style.width = 50;
                 xValue.style.alignSelf = Align.Center;
+                xValue.RegisterValueChangedCallback(evt => ChangeCharX(linesContainers.IndexOf(visualContainer), character.value.name, evt.newValue.ToString()));
                 container.Add(xValue);
 
                 var yLabel = new Label();
@@ -616,6 +618,7 @@ public class TextFilesEditor : EditorWindow
                 var yValue = new FloatField();
                 yValue.style.width = 50;
                 yValue.style.alignSelf = Align.Center;
+                yValue.RegisterValueChangedCallback(evt => ChangeCharY(linesContainers.IndexOf(visualContainer), character.value.name, evt.newValue.ToString()));
                 container.Add(yValue);
 
                 visualContainer.Add(container);
@@ -714,21 +717,12 @@ public class TextFilesEditor : EditorWindow
     public void RewriteTextFile(string[] linesArray)
     {
         string path = AssetDatabase.GetAssetPath(currentTextFile);
-        //File.WriteAllText(path, "");
         string aaa = linesArray[0];
         for (int i = 1; i < linesArray.Length; i++)
         {
             aaa += "\n" + linesArray[i];
         }
         File.WriteAllText(path, aaa, Encoding.Unicode);
-        /*
-        using (StreamWriter writer = new StreamWriter(path))
-        {
-            foreach (string line in linesArray)
-            {
-                writer.WriteLine(line);
-            }
-        }*/
         AssetDatabase.Refresh();
     }
     public void ChangeLineField(VisualElement container, string newName)
@@ -742,7 +736,7 @@ public class TextFilesEditor : EditorWindow
 
         RewriteTextFile(lines);
     }
-    /// добавить смену анимации и позиции
+    /// добавить смену позиции
     public void ChangeCharField(int index, string newName, string oldName, ObjectField field, EventCallback<ChangeEvent<UnityEngine.Object>> eventCallback)
     {
         string text = currentTextFile.text;
@@ -758,6 +752,51 @@ public class TextFilesEditor : EditorWindow
         newEvent = evt => ChangeCharField(index, evt.newValue.name, newName, field, newEvent);
         field.RegisterValueChangedCallback(newEvent);
         
+
+        RewriteTextFile(lines);
+    }
+    public void ChangeCharAnimField(int index, string charName, string newAnim)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[index];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<char=\"" + charName));
+        string secPart = editingLine.Substring(editingLine.IndexOf("<char=\"" + charName));
+        string thirdPart = secPart.Substring(secPart.IndexOf("anim=\"") + 6);
+        thirdPart = thirdPart.Substring(thirdPart.IndexOf("\""));
+        secPart = secPart.Substring(0, secPart.IndexOf("anim=\"") + 6);
+        lines[index] = firstPart + secPart + newAnim + thirdPart;
+
+
+        RewriteTextFile(lines);
+    }
+    public void ChangeCharX(int index, string charName, string newAnim)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[index];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<char=\"" + charName));
+        string secPart = editingLine.Substring(editingLine.IndexOf("<char=\"" + charName));
+        string thirdPart = secPart.Substring(secPart.IndexOf("x=\"") + 3);
+        thirdPart = thirdPart.Substring(thirdPart.IndexOf("\""));
+        secPart = secPart.Substring(0, secPart.IndexOf("x=\"") + 3);
+        lines[index] = firstPart + secPart + newAnim + thirdPart;
+
+
+        RewriteTextFile(lines);
+    }
+    public void ChangeCharY(int index, string charName, string newAnim)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[index];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<char=\"" + charName));
+        string secPart = editingLine.Substring(editingLine.IndexOf("<char=\"" + charName));
+        string thirdPart = secPart.Substring(secPart.IndexOf("y=\"") + 3);
+        thirdPart = thirdPart.Substring(thirdPart.IndexOf("\""));
+        secPart = secPart.Substring(0, secPart.IndexOf("y=\"") + 3);
+        lines[index] = firstPart + secPart + newAnim + thirdPart;
+
 
         RewriteTextFile(lines);
     }

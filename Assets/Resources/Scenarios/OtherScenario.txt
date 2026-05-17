@@ -1,4 +1,4 @@
-<name="Чукча"><bg="library", anim="transparent"><narrator><line>Эта новелла создана с целью демонстрации возможностей плагина-конструктора визуальных новелл для Unity.</line>
+<bg="library", anim="transparent"><narrator><line>Эта новелла создана с целью демонстрации возможностей плагина-конструктора визуальных новелл для Unity.</line>
 <char="CharacterPrefab", anim="Character-appear", x="0", y="0"><name="Никита"><line>Здравствуйте!</line>
 <line>С помощью данного плагина можно управлять событиями через текстовые документы (сценарии)</line>
 <music="music"><line>Можно воспроизводить музыку</line>
