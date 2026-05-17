@@ -1,3 +1,0 @@
-<name="Охранник"><line>Хочешь пройти к боссу или просто на тренировку?</line><variant next-scenario=bossTest >Хочу поговорить с боссом качалки</variant><variant next-scenario=training >Просто подкачаться</variant><variant>Да я так, мимо проходил</variant>
-<line>Тогда проваливай отсюда!</line>
-<line>Нельзя здесь просто так шляться!</line>

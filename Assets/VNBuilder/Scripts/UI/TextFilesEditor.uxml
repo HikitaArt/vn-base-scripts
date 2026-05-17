@@ -1,0 +1,15 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/VNBuilder/Scripts/UI/TextFilesEditor.uss?fileID=7433441132597879392&amp;guid=01023c3f25993964b9c830e0a7ffb2a1&amp;type=3#TextFilesEditor" />
+    <engine:VisualElement name="ScenarioSelector" style="flex-grow: 1; max-height: 50px; min-height: 50px; align-content: center; justify-content: center; align-items: center;" />
+    <engine:VisualElement name="ButtonsPanel" style="flex-grow: 1; height: 74px; max-width: none; max-height: 100px; min-height: 50px; min-width: 40px; flex-direction: row; align-content: center; align-items: center; justify-content: center; flex-wrap: wrap; align-self: auto; background-color: rgba(243, 243, 243, 0);">
+        <engine:Button text="Name" name="SelectName" style="height: 30px; width: auto; max-height: 30px; min-height: 30px; max-width: 50px; min-width: 30px; background-color: rgb(181, 255, 159);" />
+        <engine:Button text="Narrator" name="SelectNarrator" style="height: 30px; width: auto; max-height: 30px; min-height: 30px; max-width: 70px; min-width: 30px; background-color: rgb(171, 255, 239);" />
+        <engine:Button text="Character" name="Character" style="height: 30px; width: auto; max-height: 30px; min-height: 30px; max-width: 75px; min-width: 30px; background-color: rgb(255, 163, 248);" />
+        <engine:Button text="BG" name="ChangeBG" style="height: 30px; width: 30px; max-height: 30px; min-height: 30px; max-width: 30px; min-width: 30px; background-color: rgb(255, 184, 134);" />
+        <engine:Button text="OST" name="ChangeOST" style="height: 30px; width: auto; max-height: 30px; min-height: 30px; max-width: 40px; min-width: 30px; background-color: rgb(146, 157, 255);" />
+        <engine:Button text="Sound" name="PlaySound" style="height: 30px; width: auto; max-height: 30px; min-height: 30px; max-width: 50px; min-width: 30px; background-color: rgb(234, 255, 128);" />
+        <engine:Button text="Variant" name="ShowVariants" style="height: 30px; width: initial; max-height: 30px; min-height: 30px; max-width: 60px; min-width: 30px; background-color: rgb(255, 140, 140);" />
+        <engine:Button text="Line" name="AddLine" style="height: 30px; width: auto; max-height: 30px; min-height: 30px; max-width: 40px; min-width: 30px; background-color: rgb(255, 255, 255);" />
+    </engine:VisualElement>
+    <engine:ScrollView name="lines" style="transform-origin: center; margin-top: 0; margin-right: 5px; margin-bottom: 0; margin-left: 5px;" />
+</engine:UXML>

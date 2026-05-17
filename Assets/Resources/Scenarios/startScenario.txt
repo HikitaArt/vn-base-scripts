@@ -1,4 +1,0 @@
-<narrator><music="alarm"><color="black"><line>Звенит будильник</line>
-<line>Что будешь делать?</line><variant >Спать дальше</variant><variant next-scenario="gymPlace">Встать и пойти в зал</variant>
-<char="Me" anim="Character-appear" ><music="lullaby"><line>Ты выбрал счастье.</line>
-<bg="the-end", anim="black", parallax=""><line>Спокойной ночи.</line>

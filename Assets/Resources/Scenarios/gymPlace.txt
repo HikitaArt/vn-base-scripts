@@ -1,4 +1,0 @@
-<narrator><music="music"><line>Ты все-таки взял себя в руки и встал с кровати.</line>
-<bg="beach", anim="black", interactable="beachEquipment", parallax=""><line>Через пять минут ты был на пляже, где находилась качалка.</line>
-<line>Но качалки не было!</line>
-<line>От нее осталась только одна гантеля и пара снарядов</line>
