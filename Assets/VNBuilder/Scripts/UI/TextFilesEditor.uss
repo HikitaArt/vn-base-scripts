@@ -9,6 +9,7 @@
     min-width: 0;
 }
 .main-container-line {
+    color: rgb(0, 0, 0);
     background-color: rgb(230, 230, 230);
     margin: 5 px;
     padding: 5 px;
