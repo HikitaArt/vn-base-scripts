@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 public class TextFilesEditor : EditorWindow
 {
@@ -713,14 +714,21 @@ public class TextFilesEditor : EditorWindow
     public void RewriteTextFile(string[] linesArray)
     {
         string path = AssetDatabase.GetAssetPath(currentTextFile);
-        File.WriteAllText(path, "");
+        //File.WriteAllText(path, "");
+        string aaa = linesArray[0];
+        for (int i = 1; i < linesArray.Length; i++)
+        {
+            aaa += "\n" + linesArray[i];
+        }
+        File.WriteAllText(path, aaa, Encoding.Unicode);
+        /*
         using (StreamWriter writer = new StreamWriter(path))
         {
             foreach (string line in linesArray)
             {
                 writer.WriteLine(line);
             }
-        }
+        }*/
         AssetDatabase.Refresh();
     }
     public void ChangeLineField(VisualElement container, string newName)
