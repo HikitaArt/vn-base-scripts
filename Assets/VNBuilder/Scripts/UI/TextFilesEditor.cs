@@ -43,6 +43,7 @@ public class TextFilesEditor : EditorWindow
         VisualElement selector = root.Q<VisualElement>("ScenarioSelector");
         textFileField.objectType = typeof(TextAsset);
         textFileField.style.height = 40;
+        textFileField.style.alignSelf = Align.Auto;
         selector.Add(textFileField);
 
         Button newLineButton = root.Q<Button>("AddLine");
@@ -61,6 +62,11 @@ public class TextFilesEditor : EditorWindow
         addNarratorButton.RegisterCallback<ClickEvent>(evt => AddNewNarrator());
         Button addVariantButton = root.Q<Button>("ShowVariants");
         addVariantButton.RegisterCallback<ClickEvent>(evt => AddNewVariant());
+
+        Button createNewScenario = root.Q<Button>("createScenario");
+        TextField scenarioNameField = root.Q<TextField>("scenarioName");
+
+        createNewScenario.RegisterCallback<ClickEvent>(evt => CreateNewScenario(scenarioNameField.value, textFileField));
 
         scrollView = root.Q<ScrollView>("lines");
         if (scrollView == null)
@@ -126,6 +132,30 @@ public class TextFilesEditor : EditorWindow
         selectedLine = elem;
         elem.style.backgroundColor = Color.white;
     }
+    private void CreateNewScenario(string name, ObjectField scenarioField)
+    {
+        if (name != "")
+        {
+            string folderPath = Path.Combine(Application.dataPath, "Resources/Scenarios");
+            string fileName = name + ".txt";
+            string fullPath = Path.Combine(folderPath, fileName);
+            if (!File.Exists(fullPath))
+            {
+                File.WriteAllText(fullPath, "<line>первая строка</line>");
+                AssetDatabase.Refresh();
+                scenarioField.value = Resources.Load<TextAsset>("Scenarios/" + name);
+            }
+            else
+            {
+                Debug.Log("alredy exist");
+            }
+        }
+        else
+        {
+            Debug.Log("noname");
+        }
+    }
+
     private void InsertNewLine()
     {
         var container = new VisualElement();
