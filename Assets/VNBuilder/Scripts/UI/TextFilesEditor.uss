@@ -13,6 +13,9 @@
     margin: 5 px;
     padding: 5 px;
 }
+.tag-container {
+    
+}
 .name-container {
     background-color: rgb(94, 165, 73);
     width: 100 px;
@@ -42,41 +45,58 @@
 }
 .char-container {
     background-color: rgb(255, 163, 248);
+    width: 450 px;
+    height: 32 px;
     margin-bottom: 2 px;
     margin-top: 2 px;
     margin-left: 5 px;
-    padding: 2 px;
+    padding-top: 5 px;
+    padding-bottom: 5 px;
     flex-direction: row;
 }
 .bg-container {
-    background-color: rgb(255, 184, 134);
+    background-color: rgb(227, 121, 46);
+    height: 32 px;
     margin-bottom: 2 px;
     margin-top: 2 px;
     margin-left: 5 px;
-    padding: 2 px;
+    padding-top: 5 px;
+    padding-bottom: 5 px;
     flex-direction: row;
+    align-content: center;
 }
 .music-container {
+    width: 150 px;
+    height: 32 px;
     background-color: rgb(146, 157, 255);
     margin-bottom: 2 px;
     margin-top: 2 px;
     margin-left: 5 px;
-    padding: 2 px;
+    padding-top: 5 px;
+    padding-bottom: 5 px;
     flex-direction: row;
+    align-content: center;
 }
 .sound-container {
     background-color: rgb(234, 255, 128);
+    width: 150 px;
+    height: 32 px;
     margin-bottom: 2 px;
     margin-top: 2 px;
     margin-left: 5 px;
-    padding: 2 px;
+    padding-top: 5 px;
+    padding-bottom: 5 px;
     flex-direction: row;
+    align-content: center;
 }
 .variant-container {
     background-color: rgb(255, 140, 140);
+    width: 450 px;
+    height: 32 px;
     margin-bottom: 2 px;
     margin-top: 2 px;
     margin-left: 5 px;
-    padding: 2 px;
+    padding-top: 5 px;
+    padding-bottom: 5 px;
     flex-direction: row;
 }

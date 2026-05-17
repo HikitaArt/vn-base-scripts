@@ -27,7 +27,6 @@ public class TextFilesEditor : EditorWindow
         var wnd = GetWindow<TextFilesEditor>();
         wnd.titleContent = new GUIContent("ScenarioEditor");
     }
-
     public void CreateGUI()
     {
         if (m_VisualTreeAsset == null)
@@ -58,6 +57,10 @@ public class TextFilesEditor : EditorWindow
         addSoundButton.RegisterCallback<ClickEvent>(evt => AddNewSound());
         Button addCharButton = root.Q<Button>("Character");
         addCharButton.RegisterCallback<ClickEvent>(evt => AddNewChar());
+        Button addNarratorButton = root.Q<Button>("SelectNarrator");
+        addNarratorButton.RegisterCallback<ClickEvent>(evt => AddNewNarrator());
+        Button addVariantButton = root.Q<Button>("ShowVariants");
+        addVariantButton.RegisterCallback<ClickEvent>(evt => AddNewVariant());
 
         scrollView = root.Q<ScrollView>("lines");
         if (scrollView == null)
@@ -72,7 +75,6 @@ public class TextFilesEditor : EditorWindow
             RefreshScrollView(scrollView);
         });
     }
-
     private void RefreshScrollView(ScrollView scrollView)
     {
         scrollView.Clear();
@@ -197,6 +199,11 @@ public class TextFilesEditor : EditorWindow
         string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         if (!lines[index].Contains("<name"))
         {
+            if (lines[index].Contains("<narrator>"))
+            {
+                DelNarratorField(linesContainers[index].Query(className: "narrator-container").ToList()[0]);
+            }
+
             AddTagInText("<name=\"\">", index);
 
             var nameContainer = new VisualElement();
@@ -206,13 +213,44 @@ public class TextFilesEditor : EditorWindow
             delButton.AddToClassList("del-button");
             delButton.text = "❌";
             nameContainer.Add(delButton);
-            delButton.RegisterCallback<ClickEvent>(evt => DelNameField(index, linesContainers[index]));
+            delButton.RegisterCallback<ClickEvent>(evt => DelNameField(nameContainer));
             var textField = new TextField();
             textField.AddToClassList("text-field");
             textField.value = "";
             nameContainer.Add(textField);
             selectedLine.Insert(1, nameContainer);
             textField.RegisterValueChangedCallback(evt => ChangeNameField(linesContainers.IndexOf(selectedLine), evt.newValue));
+        }
+    }
+    private void AddNewNarrator()
+    {
+        int index = linesContainers.IndexOf(selectedLine);
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        if (!lines[index].Contains("<narrator>"))
+        {
+            if (lines[index].Contains("<name=\""))
+            {
+                DelNameField(linesContainers[index].Query(className: "name-container").ToList()[0]);
+            }
+
+            AddTagInText("<narrator>", index);
+
+            var container = new VisualElement();
+            container.AddToClassList("narrator-container");
+
+            var delButton = new Button();
+            delButton.AddToClassList("del-button");
+            delButton.text = "❌";
+            container.Add(delButton);
+            delButton.RegisterCallback<ClickEvent>(evt => DelNarratorField(container));
+            var label = new Label();
+            label.text = "narrator";
+            label.style.fontSize = 12;
+            label.style.alignSelf = Align.Center;
+            container.Add(label);
+
+            selectedLine.Insert(1, container);
         }
     }
     private void AddNewMusic()
@@ -225,21 +263,13 @@ public class TextFilesEditor : EditorWindow
             AddTagInText("<music=\"\">", index);
 
             var container = new VisualElement();
-            container.style.marginTop = 2.5f;
-            container.style.marginBottom = 2.5f;
-            container.style.paddingRight = 5f;
-            container.style.paddingBottom = 6f;
-            container.style.paddingTop = 6f;
-            container.style.flexDirection = FlexDirection.Row;
-            container.style.alignContent = Align.Center;
-            container.style.backgroundColor = new Color(140f / 255f, 140f / 255f, 255f / 255f);
-            container.style.width = 150;
+            container.AddToClassList("music-container");
 
             var delButton = new Button();
             delButton.AddToClassList("del-button");
             delButton.text = "❌";
             container.Add(delButton);
-            delButton.RegisterCallback<ClickEvent>(evt => DelMusicField(linesContainers.IndexOf(selectedLine), container));
+            delButton.RegisterCallback<ClickEvent>(evt => DelMusicField(container));
 
             var musicField = new ObjectField();
             musicField.objectType = typeof(AudioClip);
@@ -261,21 +291,13 @@ public class TextFilesEditor : EditorWindow
             AddTagInText("<sound=\"\">", index);
 
             var container = new VisualElement();
-            container.style.marginTop = 2.5f;
-            container.style.marginBottom = 2.5f;
-            container.style.paddingRight = 5f;
-            container.style.paddingBottom = 6f;
-            container.style.paddingTop = 6f;
-            container.style.flexDirection = FlexDirection.Row;
-            container.style.alignContent = Align.Center;
-            container.style.backgroundColor = new Color(234f / 255f, 255f / 255f, 128f / 255f);
-            container.style.width = 150;
+            container.AddToClassList("sound-container");
 
             var delButton = new Button();
             delButton.AddToClassList("del-button");
             delButton.text = "❌";
             container.Add(delButton);
-            delButton.RegisterCallback<ClickEvent>(evt => DelSoundField(linesContainers.IndexOf(selectedLine), container));
+            delButton.RegisterCallback<ClickEvent>(evt => DelSoundField(container));
 
             var musicField = new ObjectField();
             musicField.objectType = typeof(AudioClip);
@@ -292,20 +314,12 @@ public class TextFilesEditor : EditorWindow
         int index = linesContainers.IndexOf(selectedLine);
         string text = currentTextFile.text;
         string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        if (!lines[index].Contains("<music"))
-        {
-            AddTagInText("<char=\"\", anim=\"\", x=\"\", y=\"\">", index);
+        //if (!lines[index].Contains("<"))
+        //{
+            AddTagInText("<char=\"\", anim=\"\", x=\"0\", y=\"0\">", index);
 
             var container = new VisualElement();
-            container.style.marginTop = 2.5f;
-            container.style.marginBottom = 2.5f;
-            container.style.paddingRight = 5f;
-            container.style.paddingBottom = 6f;
-            container.style.paddingTop = 6f;
-            container.style.flexDirection = FlexDirection.Row;
-            container.style.alignContent = Align.Center;
-            container.style.backgroundColor = new Color(199f / 255f, 32f / 255f, 133f / 255f);
-            container.style.width = 450;
+            container.AddToClassList("char-container");
 
             var delButton = new Button();
             delButton.AddToClassList("del-button");
@@ -321,6 +335,8 @@ public class TextFilesEditor : EditorWindow
             eventCallback = evt => ChangeCharField(linesContainers.IndexOf(selectedLine), evt.newValue.name, "", character, eventCallback);
             character.RegisterValueChangedCallback(eventCallback);
 
+            delButton.RegisterCallback<ClickEvent>(evt => DelCharField(container, character.value.name));
+
             var animLabel = new Label();
             animLabel.text = "anim";
             animLabel.style.fontSize = 12;
@@ -331,6 +347,7 @@ public class TextFilesEditor : EditorWindow
             animValue.objectType = typeof(AnimationClip);
             animValue.style.width = 115;
             animValue.style.alignSelf = Align.Center;
+            animValue.RegisterValueChangedCallback(evt => ChangeCharAnimField(linesContainers.IndexOf(selectedLine), character.value.name, evt.newValue.name));
             container.Add(animValue);
 
             var xLabel = new Label();
@@ -342,6 +359,7 @@ public class TextFilesEditor : EditorWindow
             var xValue = new FloatField();
             xValue.style.width = 50;
             xValue.style.alignSelf = Align.Center;
+            xValue.RegisterValueChangedCallback(evt => ChangeCharX(linesContainers.IndexOf(selectedLine), character.value.name, evt.newValue.ToString()));
             container.Add(xValue);
 
             var yLabel = new Label();
@@ -353,10 +371,58 @@ public class TextFilesEditor : EditorWindow
             var yValue = new FloatField();
             yValue.style.width = 50;
             yValue.style.alignSelf = Align.Center;
+            yValue.RegisterValueChangedCallback(evt => ChangeCharY(linesContainers.IndexOf(selectedLine), character.value.name, evt.newValue.ToString()));
             container.Add(yValue);
 
             selectedLine.Insert(1, container);
-        }
+        //}
+    }
+    private void AddNewVariant()
+    {
+        int index = linesContainers.IndexOf(selectedLine);
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        //if (!lines[index].Contains("<music"))
+        //{
+            AddTagInText("<variant, next-scenario=\"\"></variant>", index);
+
+            var container = new VisualElement();
+            container.AddToClassList("variant-container");
+
+            var delButton = new Button();
+            delButton.AddToClassList("del-button");
+            delButton.text = "❌";
+            container.Add(delButton);
+
+        var variant = new ObjectField();
+        variant.objectType = typeof(TextAsset);
+        variant.style.width = 115;
+        variant.style.alignSelf = Align.Center;
+        container.Add(variant);
+        
+
+        delButton.RegisterCallback<ClickEvent>(evt => DelVariantField(container, variant.value.name));
+
+            var textLabel = new Label();
+            textLabel.text = "text";
+            textLabel.style.fontSize = 12;
+            textLabel.style.alignSelf = Align.Center;
+            container.Add(textLabel);
+
+            var textValue = new TextField();
+        textValue.style.width = 115;
+        textValue.style.alignSelf = Align.Center;
+        EventCallback<ChangeEvent<string>> eventCallback2 = evt => { };
+        eventCallback2 = evt => ChangeVariantTextField(linesContainers.IndexOf(selectedLine), evt.newValue, "", textValue, eventCallback2);
+        textValue.RegisterValueChangedCallback(eventCallback2);
+            container.Add(textValue);
+
+        EventCallback<ChangeEvent<UnityEngine.Object>> eventCallback = evt => { };
+        eventCallback = evt => ChangeVariantField(linesContainers.IndexOf(selectedLine), evt.newValue.name, textValue.value);
+        variant.RegisterValueChangedCallback(eventCallback);
+
+        selectedLine.Insert(1, container);
+        //}
     }
     private void AddNewBG()
     {
@@ -398,6 +464,7 @@ public class TextFilesEditor : EditorWindow
             selectedLine.Insert(1, bgContainer);
         }
     }
+
     private void AddTagInText(string tag, int indexLine)
     {
         string text = currentTextFile.text;
@@ -406,9 +473,11 @@ public class TextFilesEditor : EditorWindow
 
         RewriteTextFile(lines);
     }
+
     private void CheckAllTags(VisualElement visualContainer, string curLine, int lineIndex)
     {
         CheckName(visualContainer, curLine);
+        CheckNarrator(visualContainer, curLine);
         CheckMusic(visualContainer, curLine);
         CheckSound(visualContainer, curLine);
         CheckChar(visualContainer, curLine);
@@ -416,21 +485,14 @@ public class TextFilesEditor : EditorWindow
         CheckText(visualContainer, curLine);
         CheckVariants(visualContainer, curLine);
     }
+
     private void CheckBG(VisualElement visualContainer, string curLine)
     {
         Match match = Regex.Match(curLine, @"<bg=.+?>");
         if (match.Success)
         {
             var container = new VisualElement();
-            container.style.marginTop = 2.5f;
-            container.style.marginBottom = 2.5f;
-            container.style.paddingRight = 5f;
-            container.style.paddingBottom = 6f;
-            container.style.paddingTop = 6f;
-            container.style.flexDirection = FlexDirection.Row;
-            container.style.alignContent = Align.Center;
-            container.style.backgroundColor = new Color(227f / 255f, 121f / 255f, 46f / 255f);
-            container.style.width = 450;
+            container.AddToClassList("bg-container");
 
             var delButton = new Button();
             delButton.AddToClassList("del-button");
@@ -474,22 +536,13 @@ public class TextFilesEditor : EditorWindow
         if (match.Success)
         {
             var container = new VisualElement();
-            container.style.marginTop = 2.5f;
-            container.style.marginBottom = 2.5f;
-            container.style.paddingRight = 5f;
-            container.style.paddingBottom = 6f;
-            container.style.paddingTop = 6f;
-            container.style.flexDirection = FlexDirection.Row;
-            container.style.alignContent = Align.Center;
-            container.style.backgroundColor = new Color(140f / 255f, 140f / 255f, 255f / 255f);
-            container.style.marginLeft = 5;
-            container.style.width = 150;
+            container.AddToClassList("music-container");
 
             var delButton = new Button();
             delButton.AddToClassList("del-button");
             delButton.text = "❌";
             container.Add(delButton);
-            delButton.RegisterCallback<ClickEvent>(evt => DelMusicField(linesContainers.IndexOf(visualContainer), container));
+            delButton.RegisterCallback<ClickEvent>(evt => DelMusicField(container));
 
             string musicName = match.Value.Substring(match.Value.IndexOf("\"") + 1);
             musicName = musicName.Substring(0, musicName.IndexOf("\""));
@@ -511,22 +564,13 @@ public class TextFilesEditor : EditorWindow
         if (match.Success)
         {
             var container = new VisualElement();
-            container.style.marginTop = 2.5f;
-            container.style.marginBottom = 2.5f;
-            container.style.paddingRight = 5f;
-            container.style.paddingBottom = 6f;
-            container.style.paddingTop = 6f;
-            container.style.flexDirection = FlexDirection.Row;
-            container.style.alignContent = Align.Center;
-            container.style.backgroundColor = new Color(234f / 255f, 255f / 255f, 128f / 255f);
-            container.style.marginLeft = 5;
-            container.style.width = 150;
+            container.AddToClassList("sound-container");
 
             var delButton = new Button();
             delButton.AddToClassList("del-button");
             delButton.text = "❌";
             container.Add(delButton);
-            delButton.RegisterCallback<ClickEvent>(evt => DelSoundField(linesContainers.IndexOf(visualContainer), container));
+            delButton.RegisterCallback<ClickEvent>(evt => DelSoundField(container));
 
             string musicName = match.Value.Substring(match.Value.IndexOf("\"") + 1);
             musicName = musicName.Substring(0, musicName.IndexOf("\""));
@@ -551,20 +595,12 @@ public class TextFilesEditor : EditorWindow
             foreach (string match in matchStrings)
             {
                 var container = new VisualElement();
-                container.style.marginTop = 2.5f;
-                container.style.marginBottom = 2.5f;
-                container.style.paddingRight = 5f;
-                container.style.paddingBottom = 6f;
-                container.style.paddingTop = 6f;
-                container.style.flexDirection = FlexDirection.Row;
-                container.style.alignContent = Align.Center;
-                container.style.backgroundColor = new Color(199f / 255f, 32f / 255f, 133f / 255f);
-                container.style.marginLeft = 5;
-                container.style.width = 450;
+                container.AddToClassList("char-container");
 
                 var delButton = new Button();
                 delButton.AddToClassList("del-button");
                 delButton.text = "❌";
+                
                 container.Add(delButton);
 
                 string name = match.Substring(match.IndexOf("\"") + 1);
@@ -581,7 +617,9 @@ public class TextFilesEditor : EditorWindow
                 container.Add(character);
                 EventCallback<ChangeEvent<UnityEngine.Object>> eventCallback = evt => { };
                 eventCallback = evt => ChangeCharField(linesContainers.IndexOf(visualContainer), evt.newValue.name, name, character, eventCallback);
-                character.RegisterValueChangedCallback(eventCallback); 
+                character.RegisterValueChangedCallback(eventCallback);
+
+                delButton.RegisterCallback<ClickEvent>(evt => DelCharField(container, character.value.name));
 
                 var animLabel = new Label();
                 animLabel.text = "anim";
@@ -637,7 +675,7 @@ public class TextFilesEditor : EditorWindow
             delButton.AddToClassList("del-button");
             delButton.text = "❌";
             container.Add(delButton);
-            delButton.RegisterCallback<ClickEvent>(evt => DelNameField(linesContainers.IndexOf(visualContainer), container));
+            delButton.RegisterCallback<ClickEvent>(evt => DelNameField(container));
 
             var textField = new TextField();
             textField.AddToClassList("text-field");
@@ -647,6 +685,116 @@ public class TextFilesEditor : EditorWindow
             textField.RegisterValueChangedCallback(evt => ChangeNameField(linesContainers.IndexOf(visualContainer), evt.newValue));
         }
     }
+    private void CheckNarrator(VisualElement visualContainer, string curLine)
+    {
+        Match match = Regex.Match(curLine, @"<narrator>");
+        if (match.Success)
+        {
+            var container = new VisualElement();
+            container.AddToClassList("narrator-container");
+
+            var delButton = new Button();
+            delButton.AddToClassList("del-button");
+            delButton.text = "❌";
+            container.Add(delButton);
+            delButton.RegisterCallback<ClickEvent>(evt => DelNarratorField(container));
+
+            var label = new Label();
+            label.text = "narrator";
+            label.style.fontSize = 12;
+            label.style.alignSelf = Align.Center;
+            container.Add(label);
+            visualContainer.Add(container);
+        }
+    }
+    private void CheckText(VisualElement visualContainer, string curLine)
+    {
+        Match match = Regex.Match(curLine, @"<line>.+?</line>");
+        if (match.Success)
+        {
+            string str = match.Value.Substring(6, match.Value.IndexOf("</line>") - 6);
+            var container = new VisualElement();
+            container.AddToClassList("text-container");
+
+            var textField = new TextField();
+            textField.value = str;
+            visualContainer.Add(container);
+            container.Add(textField);
+            textField.RegisterValueChangedCallback(evt => ChangeLineField(visualContainer, evt.newValue));
+        }
+    }
+    private void CheckVariants(VisualElement visualContainer, string curLine)
+    {
+        MatchCollection matches = Regex.Matches(curLine, @"<variant.*?>.*?</variant>");
+        if (matches.Count > 0)
+        {
+            string[] variants = matches.Cast<Match>().Select(m => m.Value).ToArray();
+
+            foreach (var variant in variants)
+            {
+                var container = new VisualElement();
+                container.AddToClassList("variant-container");
+
+                var delButton = new Button();
+                delButton.AddToClassList("del-button");
+                delButton.text = "❌";
+                container.Add(delButton);
+
+
+
+                var nextScenarioField = new ObjectField();
+                nextScenarioField.objectType = typeof(TextAsset);
+                nextScenarioField.style.width = 115;
+                nextScenarioField.style.alignSelf = Align.Center;
+                container.Add(nextScenarioField);
+                if (variant.ToString().Contains("next-scenario"))
+                {
+                    string nextScenario = variant.ToString().Substring(variant.ToString().IndexOf("\"") + 1);
+                    nextScenario = nextScenario.Substring(0, nextScenario.IndexOf("\""));
+                    nextScenarioField.value = Resources.Load<TextAsset>("Scenarios/" + nextScenario);
+                }
+                container.Add(nextScenarioField);
+
+                delButton.RegisterCallback<ClickEvent>(evt => DelVariantField(container, nextScenarioField.value.name));
+
+                var textLabel = new Label();
+                textLabel.text = "text";
+                textLabel.style.fontSize = 12;
+                textLabel.style.alignSelf = Align.Center;
+                container.Add(textLabel);
+
+                string variantText = variant.ToString().Substring(variant.ToString().IndexOf(">") + 1);
+                variantText = variantText.Substring(0, variantText.IndexOf("<"));
+                var textValue = new TextField();
+                textValue.style.width = 115;
+                textValue.style.alignSelf = Align.Center;
+                EventCallback<ChangeEvent<string>> eventCallback2 = evt => { };
+                eventCallback2 = evt => ChangeVariantTextField(linesContainers.IndexOf(visualContainer), evt.newValue, "", textValue, eventCallback2);
+                textValue.RegisterValueChangedCallback(eventCallback2);
+                textValue.value = variantText;
+                container.Add(textValue);
+
+                EventCallback<ChangeEvent<UnityEngine.Object>> eventCallback = evt => { };
+                eventCallback = evt => ChangeVariantField(linesContainers.IndexOf(visualContainer), evt.newValue.name, textValue.value);
+                nextScenarioField.RegisterValueChangedCallback(eventCallback);
+
+                visualContainer.Add(container);
+            }
+        }
+    }
+
+    public void RewriteTextFile(string[] linesArray)
+    {
+        string path = AssetDatabase.GetAssetPath(currentTextFile);
+        string aaa = linesArray[0];
+        for (int i = 1; i < linesArray.Length; i++)
+        {
+            aaa += "\n" + linesArray[i];
+        }
+        File.WriteAllText(path, aaa, Encoding.Unicode);
+        AssetDatabase.Refresh();
+    }
+
     public void ChangeNameField(int index, string newName)
     {
         string text = currentTextFile.text;
@@ -686,45 +834,6 @@ public class TextFilesEditor : EditorWindow
         lines[linesContainers.IndexOf(container)] = firstPart + secPart + newAnim + editingLine;
         RewriteTextFile(lines);
     }
-    public void DelNameField(int index, VisualElement element)
-    {
-        string text = currentTextFile.text;
-        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        string editingLine = lines[index];
-        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<name=\""));
-        editingLine = editingLine.Substring(editingLine.IndexOf("<name=\"") + 7);
-        editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
-        lines[index] = firstPart + editingLine;
-
-        element.RemoveFromHierarchy();
-
-        RewriteTextFile(lines);
-    }
-    public void DelBGField(VisualElement element, VisualElement bgElem)
-    {
-        string text = currentTextFile.text;
-        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        string editingLine = lines[linesContainers.IndexOf(element)];
-        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<bg=\""));
-        editingLine = editingLine.Substring(editingLine.IndexOf("<bg=\"") + 4);
-        editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
-        lines[linesContainers.IndexOf(element)] = firstPart + editingLine;
-
-        bgElem.RemoveFromHierarchy();
-
-        RewriteTextFile(lines);
-    }
-    public void RewriteTextFile(string[] linesArray)
-    {
-        string path = AssetDatabase.GetAssetPath(currentTextFile);
-        string aaa = linesArray[0];
-        for (int i = 1; i < linesArray.Length; i++)
-        {
-            aaa += "\n" + linesArray[i];
-        }
-        File.WriteAllText(path, aaa, Encoding.Unicode);
-        AssetDatabase.Refresh();
-    }
     public void ChangeLineField(VisualElement container, string newName)
     {
         string text = currentTextFile.text;
@@ -736,7 +845,6 @@ public class TextFilesEditor : EditorWindow
 
         RewriteTextFile(lines);
     }
-    /// добавить смену позиции
     public void ChangeCharField(int index, string newName, string oldName, ObjectField field, EventCallback<ChangeEvent<UnityEngine.Object>> eventCallback)
     {
         string text = currentTextFile.text;
@@ -746,12 +854,66 @@ public class TextFilesEditor : EditorWindow
         editingLine = editingLine.Substring(editingLine.IndexOf("<char=\""+oldName) + 7);
         editingLine = editingLine.Substring(editingLine.IndexOf("\""));
         lines[index] = firstPart + newName + editingLine;
-        Debug.Log("new name " + newName + " old name " + oldName);
         field.UnregisterValueChangedCallback(eventCallback);
         EventCallback<ChangeEvent<UnityEngine.Object>> newEvent = evt => { };
         newEvent = evt => ChangeCharField(index, evt.newValue.name, newName, field, newEvent);
         field.RegisterValueChangedCallback(newEvent);
         
+
+        RewriteTextFile(lines);
+    }
+    public void ChangeVariantTextField(int index, string newText, string oldText, TextField field, EventCallback<ChangeEvent<string>> eventCallback)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[index];
+        MatchCollection matches = Regex.Matches(editingLine, @"<variant.*?>.*?</variant>");
+        string[] variants = matches.Cast<Match>().Select(m => m.Value).ToArray();
+        int tagIndex = 0;
+        for (int i = 0; i < variants.Length; i++)
+        {
+            if (variants[i].Contains(oldText))
+            {
+                tagIndex = i;
+                break;
+            }
+        }
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf(variants[tagIndex]));
+        string tag = editingLine.Substring(editingLine.IndexOf(variants[tagIndex]));
+        string secPart = tag.Substring(tag.IndexOf("</variant>")+10);
+        tag = tag.Substring(0, tag.IndexOf("</variant>") + 10);
+        tag = tag.Substring(0, tag.IndexOf(">")+1) + newText + tag.Substring(tag.IndexOf("</variant>"));
+        lines[index] = firstPart + tag + secPart;
+        field.UnregisterValueChangedCallback(eventCallback);
+        EventCallback<ChangeEvent<string>> newEvent = evt => { };
+        newEvent = evt => ChangeVariantTextField(index, evt.newValue, newText, field, newEvent);
+        field.RegisterValueChangedCallback(newEvent);
+
+        RewriteTextFile(lines);
+    }
+    public void ChangeVariantField(int index, string newScenario, string oldText)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[index];
+        MatchCollection matches = Regex.Matches(editingLine, @"<variant.*?>.*?</variant>");
+        string[] variants = matches.Cast<Match>().Select(m => m.Value).ToArray();
+        int tagIndex = 0;
+        for (int i = 0; i < variants.Length; i++)
+        {
+            if (variants[i].Contains(oldText))
+            {
+                tagIndex = i;
+                break;
+            }
+        }
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf(variants[tagIndex]));
+        string tag = editingLine.Substring(editingLine.IndexOf(variants[tagIndex]));
+        string secPart = tag.Substring(tag.IndexOf("</variant>") + 10);
+        tag = tag.Substring(0, tag.IndexOf("</variant>") + 10);
+        
+        tag = tag.Substring(0, tag.IndexOf("next-scenario=\"") + 15) + newScenario + tag.Substring(tag.IndexOf("\">"));
+        lines[index] = firstPart + tag + secPart;
 
         RewriteTextFile(lines);
     }
@@ -812,20 +974,6 @@ public class TextFilesEditor : EditorWindow
 
         RewriteTextFile(lines);
     }
-    public void DelMusicField(int index, VisualElement element)
-    {
-        string text = currentTextFile.text;
-        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        string editingLine = lines[index];
-        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<music=\""));
-        editingLine = editingLine.Substring(editingLine.IndexOf("<music=\"") + 8);
-        editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
-        lines[index] = firstPart + editingLine;
-
-        element.RemoveFromHierarchy();
-
-        RewriteTextFile(lines);
-    }
     public void ChangeSoundField(int index, string newName)
     {
         string text = currentTextFile.text;
@@ -838,17 +986,101 @@ public class TextFilesEditor : EditorWindow
 
         RewriteTextFile(lines);
     }
-    public void DelSoundField(int index, VisualElement element)
+
+    public void DelCharField(VisualElement element, string nameChar)
     {
         string text = currentTextFile.text;
         string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        string editingLine = lines[index];
+        string editingLine = lines[linesContainers.IndexOf(element.parent)];
+        string tag = editingLine.Substring(editingLine.IndexOf("<char=\"" + nameChar));
+        editingLine = editingLine.Substring(0, editingLine.IndexOf("<char=\"" + nameChar));
+        string secPart = tag.Substring(tag.IndexOf(">")+1);
+        lines[linesContainers.IndexOf(element.parent)] = editingLine + secPart;
+        RewriteTextFile(lines);
+
+        element.RemoveFromHierarchy();
+
+    }
+    public void DelVariantField(VisualElement element, string nextScenario)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[linesContainers.IndexOf(element.parent)];
+        string tag = editingLine.Substring(editingLine.IndexOf("<variant, next-scenario=\"" + nextScenario));
+        editingLine = editingLine.Substring(0, editingLine.IndexOf("<variant, next-scenario=\"" + nextScenario));
+        string secPart = tag.Substring(tag.IndexOf("t>") + 2);
+        lines[linesContainers.IndexOf(element.parent)] = editingLine + secPart;
+        RewriteTextFile(lines);
+
+        element.RemoveFromHierarchy();
+
+    }
+    public void DelMusicField(VisualElement element)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[linesContainers.IndexOf(element.parent)];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<music=\""));
+        editingLine = editingLine.Substring(editingLine.IndexOf("<music=\"") + 8);
+        editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
+        lines[linesContainers.IndexOf(element.parent)] = firstPart + editingLine;
+
+        element.RemoveFromHierarchy();
+
+        RewriteTextFile(lines);
+    }
+    public void DelSoundField(VisualElement element)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[linesContainers.IndexOf(element.parent)];
         string firstPart = editingLine.Substring(0, editingLine.IndexOf("<sound=\""));
         editingLine = editingLine.Substring(editingLine.IndexOf("<sound=\"") + 8);
         editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
-        lines[index] = firstPart + editingLine;
+        lines[linesContainers.IndexOf(element.parent)] = firstPart + editingLine;
 
         element.RemoveFromHierarchy();
+
+        RewriteTextFile(lines);
+    }
+    public void DelNameField(VisualElement element)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[linesContainers.IndexOf(element.parent)];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<name=\""));
+        editingLine = editingLine.Substring(editingLine.IndexOf("<name=\"") + 7);
+        editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
+        lines[linesContainers.IndexOf(element.parent)] = firstPart + editingLine;
+
+        element.RemoveFromHierarchy();
+
+        RewriteTextFile(lines);
+    }
+    public void DelNarratorField(VisualElement element)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[linesContainers.IndexOf(element.parent)];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<narrator>"));
+        editingLine = editingLine.Substring(editingLine.IndexOf("<narrator>") + 10);
+        lines[linesContainers.IndexOf(element.parent)] = firstPart + editingLine;
+
+        element.RemoveFromHierarchy();
+
+        RewriteTextFile(lines);
+    }
+    public void DelBGField(VisualElement element, VisualElement bgElem)
+    {
+        string text = currentTextFile.text;
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string editingLine = lines[linesContainers.IndexOf(element)];
+        string firstPart = editingLine.Substring(0, editingLine.IndexOf("<bg=\""));
+        editingLine = editingLine.Substring(editingLine.IndexOf("<bg=\"") + 4);
+        editingLine = editingLine.Substring(editingLine.IndexOf("\">") + 2);
+        lines[linesContainers.IndexOf(element)] = firstPart + editingLine;
+
+        bgElem.RemoveFromHierarchy();
 
         RewriteTextFile(lines);
     }
@@ -863,70 +1095,6 @@ public class TextFilesEditor : EditorWindow
         element.RemoveFromHierarchy();
 
         RewriteTextFile(lines); 
-    }
-    private void CheckText(VisualElement visualContainer, string curLine)
-    {
-        Match match = Regex.Match(curLine, @"<line>.+?</line>");
-        if (match.Success)
-        {
-            string str = match.Value.Substring(6, match.Value.IndexOf("</line>") - 6); 
-            var container = new VisualElement();
-            container.AddToClassList("text-container");
-
-            var textField = new TextField();
-            textField.value = str;
-            visualContainer.Add(container);
-            container.Add(textField);
-            textField.RegisterValueChangedCallback(evt => ChangeLineField(visualContainer, evt.newValue));
-        }
-    }
-    private void CheckVariants(VisualElement visualContainer, string curLine)
-    {
-        MatchCollection matches = Regex.Matches(curLine, @"<variant.*?>.*?</variant>");
-        if (matches.Count > 0)
-        {
-            string[] variants = matches.Cast<Match>().Select(m => m.Value).ToArray();
-
-            foreach ( var variant in variants )
-            {
-                var container = new VisualElement();
-                container.style.marginTop = 2.5f;
-                container.style.marginBottom = 2.5f;
-                container.style.paddingRight = 5f;
-                container.style.paddingBottom = 6f;
-                container.style.paddingTop = 6f;
-                container.style.flexDirection = FlexDirection.Row;
-                container.style.alignContent = Align.Center;
-                container.style.backgroundColor = new Color(255f / 255f, 140f / 255f, 140f / 255f);
-                container.style.width = 450;
-
-                var delButton = new Button();
-                delButton.AddToClassList("del-button");
-                delButton.text = "❌";
-                container.Add(delButton);
-
-                string variantText = variant.ToString().Substring(variant.ToString().IndexOf(">")+1);
-                variantText = variantText.Substring(0, variantText.IndexOf("<"));
-                var variantField = new TextField();
-                variantField.style.width = 115;
-                variantField.style.alignSelf = Align.Center;
-                variantField.value = variantText;
-                container.Add(variantField);
-                
-                var nextScenarioField = new ObjectField();
-                nextScenarioField.style.width = 115;
-                nextScenarioField.style.alignSelf = Align.Center;
-                if (variant.ToString().Contains("next-scenario"))
-                {
-                    string nextScenario = variant.ToString().Substring(variant.ToString().IndexOf("\"")+1);
-                    nextScenario = nextScenario.Substring(0, nextScenario.IndexOf("\""));
-                    Debug.Log(nextScenario);
-                    nextScenarioField.value = Resources.Load<TextAsset>("Scenarios/" + nextScenario);
-                }
-                container.Add(nextScenarioField);
-                visualContainer.Add(container);
-            }
-        }
     }
 }
 #endif
